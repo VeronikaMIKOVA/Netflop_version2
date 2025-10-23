@@ -67,7 +67,10 @@ main h2 {
 #filmsPopulaires,
 #seriesPopulaires,
 #documentaires,
-#mangaEtAnimes {
+#sectionMangas,
+#animes,
+#shows,
+#concerts {
   padding: 1rem;
   border-radius: 12px;
   margin-bottom: 1rem;
@@ -88,15 +91,27 @@ main h2 {
 }
 
 #seriesPopulaires {
-  background: linear-gradient(90deg, #3a0060 0%, #0d0d0f 100%);
+  background: linear-gradient(90deg, #605b00 0%, #0d0d0f 100%);
 }
 
 #documentaires {
-  background: linear-gradient(90deg, #001d90 0%, #0d0d0f 100%);
+  background: linear-gradient(90deg, #3c9000 0%, #0d0d0f 100%);
 }
 
-#mangaEtAnimes {
-  background: linear-gradient(90deg, #84023a 0%, #0d0d0f 100%);
+#sectionMangas {
+  background: linear-gradient(90deg, #028461 0%, #0d0d0f 100%);
+}
+
+#animes {
+  background: linear-gradient(90deg, #012284 0%, #0d0d0f 100%);
+}
+
+#shows{
+  background: linear-gradient(90deg, #84015d 0%, #0d0d0f 100%);
+}
+
+#concerts{
+  background: linear-gradient(90deg, #840101 0%, #0d0d0f 100%);
 }
 
 /* -------------------- CARTES -------------------- */

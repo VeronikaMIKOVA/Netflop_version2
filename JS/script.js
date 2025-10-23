@@ -1,6 +1,6 @@
 // Netflop version XMLHttpRequest → objet javascript pour récupérer objet xml ou jason
 
-function chargerNetflopXml(){
+function chargerNetflopJSON(){
     // Créer un nouvel objet XMLHttpRequest
     let xhr = new XMLHttpRequest();  // xhr = XMLHttpRequest
 
@@ -8,26 +8,29 @@ function chargerNetflopXml(){
     // utiliser la méthode 'GET' → pour récupérer des données
     // le nom du fichier à charger 
     // on passera l'option à true → requête asynchrone(ne bloque pas le navigateur et l'execution du code)
-    xhr.open('GET', 'netflop.xml', true);
+    xhr.open('GET', 'netflop.json', true);
 
     // Définir le questionnaire d'évenements pour le chargement
     xhr.onload = function(){
         // vérification si la requête réussi
         // status 200 → OK(succès)
         if(xhr.status === 200){
-            // Parser le XML avec DOMPARSER (parser = parcourir, analyser)
-            let parser = new DOMParser();
-            // parse le text xml reçu et convertir en document XML
-            // xhr.responseText = le contenu du fichier xml en texte
-            // 'text/xml' = type MIME pour indiquer que c'est du XML
-            let xmlDoc = parser.parseFromString(xhr.responseText, 'text/xml');
-
+            // Parser le JSON avec parse (parser = parcourir, analyser)
+            let data = JSON.parse(xhr.responseText);
+            console.log(data);
+        
             // afficher les différentes catégories
-            afficherFilmsXML(xmlDoc);
-            afficherSeriesXML(xmlDoc); 
+            afficherFilmsJSON(data.netflop.films.film);
+            afficherSeriesJSON(data.netflop.series.serie);
+            afficherDocumentairesJSON(data.netflop.documentaires.documentaire);
+            afficherMangasJSON(data.netflop.mangas.manga);
+            afficherAnimesJSON(data.netflop.animes.anime);
+            afficherShowsJSON(data.netflop.shows.show);
+            afficherConcertsJSON(data.netflop.concerts.concert);
+            // afficherDocumentairesXML(data.netflop.series.serie);
         }
         else{
-            console.error('Erreur lors du chargement du fichier XML.');
+            console.error('Erreur lors du chargement du fichier JSON.');
             console.error('Status: ', xhr.status);
             console.error('Message: ', xhr.statusText);
         }
@@ -35,7 +38,7 @@ function chargerNetflopXml(){
 
     // gérer les erreurs réseau
     xhr.onerror = function(){
-        console.error('Erreur réseau lors du chargement du fichier xml');
+        console.error('Erreur réseau lors du chargement du fichier JSON');
         alert('Impossible de charger les données. Vérifier votre connexion !');
     };
     // Envoyer la requête
@@ -45,10 +48,10 @@ function chargerNetflopXml(){
 //________________________________________________________________________________________//
 
 /**
- * Fonction pour afficher les films depuis le document XML
- * @param {Document} xmlDoc Document XML parsé par DOMParser
+ * Fonction pour afficher les films depuis le document JSON
+ * @param {Document} films Document JSON parsé 
  */
-function afficherFilmsXML(xmlDoc){
+function afficherFilmsJSON(films){
     // Récupérer le conteneur HTML où afficher les film
     let container = document.getElementById('filmsPopulaires');
     //Créer un titre pour la section
@@ -56,13 +59,9 @@ function afficherFilmsXML(xmlDoc){
     titre.textContent = "Films";
     container.appendChild(titre);
 
-    // Récupérer TOUS les elements <film> du XML
-    // getElementsByTagName() retourne une collection de tous les elements avec ce nom de balise
-    let films = xmlDoc.getElementsByTagName('film');
-
     // Parcourir tous les films (attention films est un HTMLCollection, du coup pas un vrai tableau !)
     for(let i = 0; i < films.length; i++){
-        let filmCard = creerCarteXML(films[i]);
+        let filmCard = creerCarteJson(films[i],"films");
         container.appendChild(filmCard);
     }
     console.log(films);
@@ -71,10 +70,10 @@ function afficherFilmsXML(xmlDoc){
 //________________________________________________________________________________________//
 
 /**
- * Fonction pour afficher les series depuis le document XML
- * @param {Document} xmlDoc Document XML parsé par DOMParser
+ * Fonction pour afficher les series depuis le document JSON
+ * @param {Document} series Document JSON parsé
  */
-function afficherSeriesXML(xmlDoc){
+function afficherSeriesJSON(series){
     // Récupérer le conteneur HTML où afficher les series
     let container = document.getElementById("seriesPopulaires");
     //Créer un titre pour la section
@@ -82,17 +81,134 @@ function afficherSeriesXML(xmlDoc){
     titre.textContent = "Series";
     container.appendChild(titre);
 
-    // Récupérer TOUS les elements <serie> du XML
-    // getElementsByTagName() retourne une collection de tous les elements avec ce nom de balise
-    let series = xmlDoc.getElementsByTagName('serie');
     
 
     // Parcourir tous les series (attention series est un HTMLCollection, du coup pas un vrai tableau !)
     for(let i = 0; i < series.length; i++){
-        let serieCard = creerCarteXML(series[i]);
+        let serieCard = creerCarteJson(series[i], "series");
         container.appendChild(serieCard);
     }
     console.log(series);
+}
+
+//________________________________________________________________________________________//
+
+/**
+ * Fonction pour afficher les documentaires depuis le document JSON
+ * @param {Document} documentaires Document JSON parsé
+ */
+function afficherDocumentairesJSON(documentaires){
+    // Récupérer le conteneur HTML où afficher les series
+    let container = document.getElementById("documentaires");
+    //Créer un titre pour la section
+    let titre = document.createElement('h2');
+    titre.textContent = "Documentaires";
+    container.appendChild(titre);
+
+    
+
+    // Parcourir tous les documentaires (attention documentaires est un HTMLCollection, du coup pas un vrai tableau !)
+    for(let i = 0; i < documentaires.length; i++){
+        let documentaireCard = creerCarteJson(documentaires[i], "documentaires");
+        container.appendChild(documentaireCard);
+    }
+    console.log(documentaires);
+}
+
+//________________________________________________________________________________________//
+
+/**
+ * Fonction pour afficher les mangas depuis le document JSON
+ * @param {Document} mangas Document JSON parsé
+ */
+function afficherMangasJSON(mangas){
+    // Récupérer le conteneur HTML où afficher les mangas
+    let container = document.getElementById("sectionMangas");
+    //Créer un titre pour la section
+    let titre = document.createElement('h2');
+    titre.textContent = "Mangas";
+    container.appendChild(titre);
+
+    
+
+    // Parcourir tous les mangas (attention mangas est un HTMLCollection, du coup pas un vrai tableau !)
+    for(let i = 0; i < mangas.length; i++){
+        let mangaCard = creerCarteJson(mangas[i], "mangas");
+        container.appendChild(mangaCard);
+    }
+    console.log(mangas);
+}
+
+//________________________________________________________________________________________//
+
+/**
+ * Fonction pour afficher les animes depuis le document JSON
+ * @param {Document} animes Document JSON parsé
+ */
+function afficherAnimesJSON(animes){
+    // Récupérer le conteneur HTML où afficher les animes
+    let container = document.getElementById("animes");
+    //Créer un titre pour la section
+    let titre = document.createElement('h2');
+    titre.textContent = "Animés";
+    container.appendChild(titre);
+
+    
+
+    // Parcourir tous les animes (attention animes est un HTMLCollection, du coup pas un vrai tableau !)
+    for(let i = 0; i < animes.length; i++){
+        let animeCard = creerCarteJson(animes[i], "animes");
+        container.appendChild(animeCard);
+    }
+    console.log(animes);
+}
+
+//________________________________________________________________________________________//
+
+/**
+ * Fonction pour afficher les shows depuis le document JSON
+ * @param {Document} shows Document JSON parsé
+ */
+function afficherShowsJSON(shows){
+    // Récupérer le conteneur HTML où afficher les shows
+    let container = document.getElementById("shows");
+    //Créer un titre pour la section
+    let titre = document.createElement('h2');
+    titre.textContent = "Shows";
+    container.appendChild(titre);
+
+    
+
+    // Parcourir tous les shows (attention shows est un HTMLCollection, du coup pas un vrai tableau !)
+    for(let i = 0; i < shows.length; i++){
+        let showCard = creerCarteJson(shows[i], "shows");
+        container.appendChild(showCard);
+    }
+    console.log(shows);
+}
+
+//________________________________________________________________________________________//
+
+/**
+ * Fonction pour afficher les concerts depuis le document JSON
+ * @param {Document} concerts Document JSON parsé
+ */
+function afficherConcertsJSON(concerts){
+    // Récupérer le conteneur HTML où afficher les concerts
+    let container = document.getElementById("concerts");
+    //Créer un titre pour la section
+    let titre = document.createElement('h2');
+    titre.textContent = "Concerts";
+    container.appendChild(titre);
+
+    
+
+    // Parcourir tous les concerts (attention concerts est un HTMLCollection, du coup pas un vrai tableau !)
+    for(let i = 0; i < concerts.length; i++){
+        let concertCard = creerCarteJson(concerts[i], "concerts");
+        container.appendChild(concertCard);
+    }
+    console.log(concerts);
 }
 
 //________________________________________________________________________________________//
@@ -102,31 +218,31 @@ function afficherSeriesXML(xmlDoc){
  * @param {element} item - élement XML (film, série, etc)
  * @returns {HTMLElement} - élement div représentant la carte
  */
-function creerCarteXML(item){
+function creerCarteJson(item){
     // créer le conteneur de la carte
     // créer une div pour la carte
     let card = document.createElement('div');
     card.className = 'card'; // card.setAttribute("class", "card");
 
-    // extraire du XML
-    // Récupérer le nom depuis la balise <nom>
-    let nom = item.getElementsByTagName('nom')[0].textContent;
+    // extraire du JSON
+    // Récupérer le nom depuis l'id "nom"
+    let nom = item.nom[0].textContent;
     
-    // récuperer le genre depuis la balise <genre>
-    let genre = item.getElementsByTagName('genre')[0].textContent;
+    // récuperer le genre depuis l'id "genre"
+    let genre = item.genre[0].textContent;
 
-    // récuperer le realisateur depuis la balise <realisateur>
-    let realisateur = item.getElementsByTagName('realisateur')[0].textContent;
+    // récuperer le realisateur depuis l'id "nom"
+    let realisateur = item.realisateur[0].textContent;
         
-    // récuperer la date de sortie depuis la balise <dateSortie>
-    let dateSortie = item.getElementsByTagName('dateSortie')[0].textContent
+    // récuperer la date de sortie depuis l'id "nom"
+    let dateSortie = item.dateSortie[0].textContent;
 
-    // récuperer le résumé depuis la balise <resumer>
+    // récuperer le résumé depuis l'id "nom"
     // trim() = supprimer les espaces au début et à la fin
-    let resumer = item.getElementsByTagName('resumer')[0].textContent.trim();
+    let resumer = item.resumer[0].textContent;
 
-    //récuperer l'url de l'image depuis la balise <url>
-    let url = item.getElementsByTagName('url')[0].textContent;
+    //récuperer l'url de l'image depuis l'id "nom"
+    let url = item.url;
 
         // créer un élement img (dans index.html) pour afficher l'image
         let img = document.createElement('img');
@@ -197,8 +313,8 @@ function creerCarteXML(item){
  */
 document.addEventListener('DOMContentLoaded', function(){
     console.log("le DOM est chargé, lancement de netflop avec DOMParser...");
-    // executer la function chargerNetflopXML
-    chargerNetflopXml();
+    // executer la function chargerNetflopJSON
+    chargerNetflopJSON();
 });
 
 //________________________________________________________________________________________//
