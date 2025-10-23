@@ -108,6 +108,22 @@ function creerCarteXML(item){
     let card = document.createElement('div');
     card.className = 'card'; // card.setAttribute("class", "card");
 
+    // RENDRE L'ELEMENT CLIQUABLE
+    // Récupérer l'id de l'élement depuis l'attribut id
+    let itemId = item.getAttribute('id');
+    //Récupérer le nom de la balise XML pour déterminer la catégorie
+    let itemType = item.tagName.toLowerCase();
+    // Vérifier que l'id existe avant de rendre la card cliquable
+    if(itemId && itemType){
+    // Ajouter l'événement au click
+        card.onclick=function(){
+    // Rédiriger vers la page détail avec l'id et le type dynamique
+            window.location.href = `HTML/details.html?id=${itemId}&type=${itemType}`;
+        };
+    }
+
+
+
     // extraire du XML
     // Récupérer le nom depuis la balise <nom>
     let nom = item.getElementsByTagName('nom')[0].textContent;
