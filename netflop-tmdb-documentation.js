@@ -20,15 +20,23 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500/';
  */
 async function chargerNetflopTMDB() {
     // Afficher un message dans la console pour indiquer le début du chargement
-    
+    console.log('Début du chargement.')
     // Charger les 4 catégories en parallèle avec Promise.all()
     // await = attendre que toutes les promesses soient terminées
     // Promise.all() = exécuter plusieurs requêtes en même temps (plus rapide)
-    
+    let chargement = await Promise.all([]);
     // Message de succès quand tout est chargé
-    
+    chargement.onload = function(){
+        if(chargement.status === 200){
+            console.log('Fin du chargement avec succès.')
+        }
     // Si une erreur se produit, l'afficher dans la console
     // Afficher une alerte à l'utilisateur
+        else{
+            console.error('Erreur lors du chargement');
+            alert('Impossible de charger les données.')
+        }
+    };
 }
 
 /**
