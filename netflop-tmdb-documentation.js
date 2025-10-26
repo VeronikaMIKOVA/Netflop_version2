@@ -18,24 +18,21 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500/';
  * Fonction principale pour charger toutes les données depuis TMDB
  * Fonction asynchrone (async) car elle doit attendre les réponses de l'API
  */
-async function chargerNetflopTMDB() {
+async function chargerNetflopTMDB(){
+    try{
     // Afficher un message dans la console pour indiquer le début du chargement
-    console.log('Début du chargement.')
+        console.log("Début du chargement.");
     // Charger les 4 catégories en parallèle avec Promise.all()
     // await = attendre que toutes les promesses soient terminées
     // Promise.all() = exécuter plusieurs requêtes en même temps (plus rapide)
-    let chargement = await Promise.all([]);
+        await Promise.all([afficherFilmsPopulaires(), afficherSeriesPopulaires(), afficherDocumentaires(), afficherAnimes()]);
     // Message de succès quand tout est chargé
-    chargement.onload = function(){
-        if(chargement.status === 200){
-            console.log('Fin du chargement avec succès.')
+            console.log("Fin du chargement avec succès.");
         }
     // Si une erreur se produit, l'afficher dans la console
     // Afficher une alerte à l'utilisateur
-        else{
-            console.error('Erreur lors du chargement');
-            alert('Impossible de charger les données.')
-        }
+    catch(error){
+        console.error('Erreur:', error);
     };
 }
 
@@ -44,12 +41,13 @@ async function chargerNetflopTMDB() {
  * Fonction asynchrone car elle fait une requête à l'API
  */
 async function afficherFilmsPopulaires() {
+    try{
     // Construire l'URL de la requête API avec les paramètres
     // movie/popular = endpoint pour les films populaires
     // api_key = notre clé d'authentification
     // language=fr-FR = obtenir les résultats en français
     // page=1 = première page de résultats
-    
+    const url = `${BASE_URL}/movie/popular?api.key=${API_KEY}&language=fr_FR&page=10`;
     // ============================================
     // FETCH : ÉTAPE 1 - Lancer la requête HTTP
     // ============================================
@@ -57,14 +55,16 @@ async function afficherFilmsPopulaires() {
     // C'est une opération ASYNCHRONE (ne bloque pas le reste du code)
     // await = PAUSE : attendre que le serveur réponde avant de continuer
     // Résultat stocké dans 'response' = objet Response avec infos HTTP
-    
+    const response = await fetch(url);
     // ============================================
     // FETCH : ÉTAPE 2 - Vérifier le code HTTP
     // ============================================
     // response.ok vérifie si le code HTTP est 2xx (succès)
     // Exemples : 200 = OK, 404 = Not Found, 500 = Server Error
     // Si erreur (404, 500...), on lance une exception
-    
+    if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
     // ============================================
     // FETCH : ÉTAPE 3 - Convertir JSON → JavaScript
     // ============================================
@@ -72,15 +72,19 @@ async function afficherFilmsPopulaires() {
     // response.json() les convertit en objet JavaScript utilisable
     // C'est aussi asynchrone, donc on utilise await
     // Résultat : 'data' contient un objet avec { results: [...films] }
-    
+    const data = await response.json();
     // Récupérer le conteneur HTML où afficher les films
+    let conteneur = document.getElementById('filmsPopulaires');
     
     // Vider le conteneur (supprimer le loader animé)
+    conteneur.innerHTML = ""; 
     
     // Créer un élément h2 pour le titre de la section
     // Définir le texte du titre
     // Ajouter le titre au conteneur
-    
+    let titre = document.createElement('h2');
+    let nom = 
+        titre.textContent = 'nom';
     // Créer la structure du slider avec les 15 premiers films
     // data.results = tableau de films reçu de l'API
     // slice(0, 15) = prendre seulement les 15 premiers
@@ -97,6 +101,7 @@ async function afficherFilmsPopulaires() {
     // - Erreur de parsing JSON
     // Le code "saute" directement ici dans le catch
     // On affiche l'erreur dans la console pour déboguer
+    } catch(){};
 }
 
 /**
